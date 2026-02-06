@@ -2,201 +2,149 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>ShiftDown Pro</title>
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="avatar.png">
-    <link rel="apple-touch-icon" href="avatar.png">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShiftDown PRO v5.0</title>
     <style>
         :root {
-            --accent: #ff0055;
-            --secondary: #00d1ff;
-            --bg: #050505;
+            --neon: #00f2ff;
+            --pink: #ff0080;
+            --dark: #0a0a0a;
         }
 
-        body { 
-            background: var(--bg); 
-            color: white; 
-            font-family: 'Inter', -apple-system, sans-serif; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            height: 100vh; 
-            margin: 0; 
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--dark);
+            color: white;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             overflow: hidden;
         }
 
-        /* Анимированные круги на фоне */
-        .bg-glow {
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(255, 0, 85, 0.2) 0%, transparent 70%);
-            filter: blur(50px);
+        /* Анимированный фон с сеткой */
+        .bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: 
+                linear-gradient(to bottom, rgba(0, 242, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(to right, rgba(0, 242, 255, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
             z-index: -1;
-            animation: move 10s infinite alternate;
-        }
-        .bg-glow.blue {
-            background: radial-gradient(circle, rgba(0, 209, 255, 0.15) 0%, transparent 70%);
-            animation-delay: -5s;
         }
 
-        @keyframes move {
-            from { transform: translate(-50%, -50%); }
-            to { transform: translate(50%, 50%); }
+        .container {
+            background: rgba(15, 15, 15, 0.8);
+            border: 2px solid var(--neon);
+            box-shadow: 0 0 20px var(--neon), inset 0 0 10px var(--neon);
+            border-radius: 25px;
+            padding: 40px;
+            width: 85%;
+            max-width: 400px;
+            text-align: center;
+            backdrop-filter: blur(10px);
         }
 
-        /* Основная карточка */
-        .app-ui { 
-            width: 90%; 
-            max-width: 380px; 
-            text-align: center; 
-            background: rgba(20, 20, 20, 0.6);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            padding: 40px 30px; 
-            border-radius: 40px; 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-        }
-
-        /* Кнопка установки */
-        #installBanner {
-            display: none;
-            background: linear-gradient(135deg, var(--accent), #ff4d8d);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-bottom: 25px;
-            box-shadow: 0 10px 20px rgba(255, 0, 85, 0.3);
-            border: none;
-            width: 100%;
-        }
-
-        .logo-container h1 {
-            font-size: 42px;
-            font-weight: 900;
-            margin: 0;
-            background: linear-gradient(to right, var(--accent), var(--secondary));
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            background: linear-gradient(to right, var(--neon), var(--pink));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: -2px;
+            filter: drop-shadow(0 0 5px var(--neon));
         }
 
-        .tagline {
-            font-size: 10px;
-            color: #666;
+        input {
+            width: 100%;
+            padding: 15px;
+            background: #000;
+            border: 1px solid var(--neon);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+            margin-bottom: 25px;
+            outline: none;
+            box-sizing: border-box;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            box-shadow: 0 0 15px var(--pink);
+            border-color: var(--pink);
+        }
+
+        .download-btn {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 10px;
+            background: var(--neon);
+            color: #000;
+            font-size: 1.1rem;
+            font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 4px;
-            margin-bottom: 35px;
-        }
-
-        /* Поле ввода */
-        .input-wrapper {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        input { 
-            width: 100%; 
-            padding: 18px 20px; 
-            background: rgba(0,0,0,0.3); 
-            border: 1px solid rgba(255,255,255,0.05); 
-            border-radius: 18px; 
-            color: white; 
-            box-sizing: border-box; 
-            outline: none; 
-            font-size: 15px;
+            cursor: pointer;
             transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 242, 255, 0.4);
         }
 
-        input:focus { border-color: var(--accent); background: rgba(0,0,0,0.5); }
-
-        /* Кнопка скачать */
-        .dl-btn { 
-            width: 100%; 
-            padding: 18px; 
-            background: linear-gradient(135deg, var(--accent), #e6004d); 
-            border: none; 
-            border-radius: 18px; 
-            color: white; 
-            font-weight: 700; 
-            font-size: 16px;
-            cursor: pointer; 
-            transition: 0.3s;
-            box-shadow: 0 10px 25px rgba(255, 0, 85, 0.2);
+        .download-btn:active {
+            transform: scale(0.95);
+            background: var(--pink);
         }
 
-        .dl-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(255, 0, 85, 0.4); }
-        .dl-btn:active { transform: scale(0.97); }
-
-        .footer {
-            margin-top: 30px;
-            font-size: 11px;
-            color: #333;
-            font-weight: 500;
+        #status {
+            margin-top: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            min-height: 20px;
         }
+
+        .error { color: var(--pink); }
+        .success { color: var(--neon); }
     </style>
 </head>
 <body>
 
-    <div class="bg-glow"></div>
-    <div class="bg-glow blue"></div>
+<div class="bg"></div>
 
-    <div class="app-ui">
-        <button id="installBanner" onclick="installApp()">INSTALL SHIFTDOWN PRO</button>
-        
-        <div class="logo-container">
-            <h1>SHIFTDOWN</h1>
-            <div class="tagline">Ultra-Fast Node Downloader</div>
-        </div>
-        
-        <div class="input-wrapper">
-            <input type="text" id="dlUrl" placeholder="Paste direct link here...">
-        </div>
+<div class="container">
+    <h1>ShiftDown</h1>
+    <input type="text" id="fileUrl" placeholder="PASTE LINK (HTTPS://...)">
+    <button class="download-btn" onclick="startDownload()">Execute Download</button>
+    <div id="status"></div>
+</div>
 
-        <button class="dl-btn" onclick="run()">START DOWNLOAD</button>
-        
-        <div class="footer" id="status">BUILD 2.5.0 • SECURE NODE ACTIVE</div>
-    </div>
+<script>
+    function startDownload() {
+        const input = document.getElementById('fileUrl');
+        const status = document.getElementById('status');
+        const url = input.value.trim();
 
-    <script>
-function startProcess() {
-    const url = document.getElementById('link').value.trim();
-    const log = document.getElementById('status');
-    
-    if (!url) {
-        log.innerHTML = '<span style="color:red">PASTE LINK FIRST!</span>';
-        return;
+        if (!url) {
+            status.innerHTML = '<span class="error">WAITING FOR LINK...</span>';
+            return;
+        }
+
+        // Проверяем на корректность протокола
+        if (url.startsWith('http://') || url.startsWith('https://')) {
+            status.innerHTML = '<span class="success">BYPASSING SYSTEM... OPENING BROWSER</span>';
+            
+            // Задержка для эффекта "загрузки" и жесткий переход в браузер
+            setTimeout(() => {
+                window.location.href = url;
+            }, 800);
+            
+        } else {
+            status.innerHTML = '<span class="error">FILE NOT FOUND OR UNAVAILABLE!</span>';
+        }
     }
-
-    // 1. Показываем статус
-    log.innerHTML = 'LAUNCHING SYSTEM BROWSER...';
-
-    // 2. Ядерный метод открытия ссылки во внешнем мире:
-    // Мы создаем скрытую ссылку и эмулируем клик с атрибутом target="_blank"
-    // Это заставляет Android искать подходящее приложение (Chrome, YouTube и т.д.)
-    let ghostLink = document.createElement('a');
-    ghostLink.href = url;
-    ghostLink.target = '_blank'; // Ключевой момент!
-    ghostLink.rel = 'noopener noreferrer';
-    
-    // Специальный трюк для Android WebView:
-    // Если ссылка ведет на YouTube или файл, Android предложит выбрать приложение
-    document.body.appendChild(ghostLink);
-    ghostLink.click();
-    document.body.removeChild(ghostLink);
-
-    // Запасной метод, если первый заблокирован
-    setTimeout(() => {
-        window.location.assign(url);
-    }, 500);
-}
 </script>
-</body>
 
+</body>
 </html>
