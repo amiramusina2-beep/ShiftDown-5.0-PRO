@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ShiftDown Pro</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="avatar.png">
+    <link rel="apple-touch-icon" href="avatar.png">
+    
+    <style>
+        :root {
+            --accent: #ff0055;
+            --secondary: #00d1ff;
+            --bg: #050505;
+        }
+
+        body { 
+            background: var(--bg); 
+            color: white; 
+            font-family: 'Inter', -apple-system, sans-serif; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+            margin: 0; 
+            overflow: hidden;
+        }
+
+        /* Анимированные круги на фоне */
+        .bg-glow {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 0, 85, 0.2) 0%, transparent 70%);
+            filter: blur(50px);
+            z-index: -1;
+            animation: move 10s infinite alternate;
+        }
+        .bg-glow.blue {
+            background: radial-gradient(circle, rgba(0, 209, 255, 0.15) 0%, transparent 70%);
+            animation-delay: -5s;
+        }
+
+        @keyframes move {
+            from { transform: translate(-50%, -50%); }
+            to { transform: translate(50%, 50%); }
+        }
+
+        /* Основная карточка */
+        .app-ui { 
+            width: 90%; 
+            max-width: 380px; 
+            text-align: center; 
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 40px 30px; 
+            border-radius: 40px; 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        }
+
+        /* Кнопка установки */
+        #installBanner {
+            display: none;
+            background: linear-gradient(135deg, var(--accent), #ff4d8d);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 20px rgba(255, 0, 85, 0.3);
+            border: none;
+            width: 100%;
+        }
+
+        .logo-container h1 {
+            font-size: 42px;
+            font-weight: 900;
+            margin: 0;
+            background: linear-gradient(to right, var(--accent), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -2px;
+        }
+
+        .tagline {
+            font-size: 10px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 35px;
+        }
+
+        /* Поле ввода */
+        .input-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        input { 
+            width: 100%; 
+            padding: 18px 20px; 
+            background: rgba(0,0,0,0.3); 
+            border: 1px solid rgba(255,255,255,0.05); 
+            border-radius: 18px; 
+            color: white; 
+            box-sizing: border-box; 
+            outline: none; 
+            font-size: 15px;
+            transition: 0.3s;
+        }
+
+        input:focus { border-color: var(--accent); background: rgba(0,0,0,0.5); }
+
+        /* Кнопка скачать */
+        .dl-btn { 
+            width: 100%; 
+            padding: 18px; 
+            background: linear-gradient(135deg, var(--accent), #e6004d); 
+            border: none; 
+            border-radius: 18px; 
+            color: white; 
+            font-weight: 700; 
+            font-size: 16px;
+            cursor: pointer; 
+            transition: 0.3s;
+            box-shadow: 0 10px 25px rgba(255, 0, 85, 0.2);
+        }
+
+        .dl-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(255, 0, 85, 0.4); }
+        .dl-btn:active { transform: scale(0.97); }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 11px;
+            color: #333;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow"></div>
+    <div class="bg-glow blue"></div>
+
+    <div class="app-ui">
+        <button id="installBanner" onclick="installApp()">INSTALL SHIFTDOWN PRO</button>
+        
+        <div class="logo-container">
+            <h1>SHIFTDOWN</h1>
+            <div class="tagline">Ultra-Fast Node Downloader</div>
+        </div>
+        
+        <div class="input-wrapper">
+            <input type="text" id="dlUrl" placeholder="Paste direct link here...">
+        </div>
+
+        <button class="dl-btn" onclick="run()">START DOWNLOAD</button>
+        
+        <div class="footer" id="status">BUILD 2.5.0 • SECURE NODE ACTIVE</div>
+    </div>
+
+    <script>
+        function run() {
+            const val = document.getElementById('dlUrl').value;
+            const status = document.getElementById('status');
+            if(!val) return alert("Please paste a link first!");
+            
+            status.innerText = "INITIALIZING SECURE DOWNLOAD...";
+            status.style.color = "#ff0055";
+
+            setTimeout(() => {
+                const a = document.createElement('a');
+                a.href = val;
+                a.setAttribute('download', '');
+                a.target = "_blank";
+                a.click();
+                status.innerText = "BUILD 2.5.0 • SECURE NODE ACTIVE";
+                status.style.color = "#333";
+            }, 1500);
+        }
+
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installBanner').style.display = 'block';
+        });
+
+        async function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    document.getElementById('installBanner').style.display = 'none';
+                }
+                deferredPrompt = null;
+            }
+        }
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+</body>
+</html>
