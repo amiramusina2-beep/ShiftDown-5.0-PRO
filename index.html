@@ -165,46 +165,38 @@
     </div>
 
     <script>
-        function run() {
-            const val = document.getElementById('dlUrl').value;
-            const status = document.getElementById('status');
-            if(!val) return alert("Please paste a link first!");
-            
-            status.innerText = "INITIALIZING SECURE DOWNLOAD...";
-            status.style.color = "#ff0055";
+function startProcess() {
+    const url = document.getElementById('link').value.trim();
+    const log = document.getElementById('status');
+    
+    if (!url) {
+        log.innerHTML = '<span style="color:red">PASTE LINK FIRST!</span>';
+        return;
+    }
 
-            setTimeout(() => {
-                const a = document.createElement('a');
-                a.href = val;
-                a.setAttribute('download', '');
-                a.target = "_blank";
-                a.click();
-                status.innerText = "BUILD 2.5.0 • SECURE NODE ACTIVE";
-                status.style.color = "#333";
-            }, 1500);
-        }
+    // 1. Показываем статус
+    log.innerHTML = 'LAUNCHING SYSTEM BROWSER...';
 
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            document.getElementById('installBanner').style.display = 'block';
-        });
+    // 2. Ядерный метод открытия ссылки во внешнем мире:
+    // Мы создаем скрытую ссылку и эмулируем клик с атрибутом target="_blank"
+    // Это заставляет Android искать подходящее приложение (Chrome, YouTube и т.д.)
+    let ghostLink = document.createElement('a');
+    ghostLink.href = url;
+    ghostLink.target = '_blank'; // Ключевой момент!
+    ghostLink.rel = 'noopener noreferrer';
+    
+    // Специальный трюк для Android WebView:
+    // Если ссылка ведет на YouTube или файл, Android предложит выбрать приложение
+    document.body.appendChild(ghostLink);
+    ghostLink.click();
+    document.body.removeChild(ghostLink);
 
-        async function installApp() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') {
-                    document.getElementById('installBanner').style.display = 'none';
-                }
-                deferredPrompt = null;
-            }
-        }
-
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
-        }
-    </script>
+    // Запасной метод, если первый заблокирован
+    setTimeout(() => {
+        window.location.assign(url);
+    }, 500);
+}
+</script>
 </body>
+
 </html>
